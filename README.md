@@ -1,6 +1,31 @@
-# tinyml
-The course project for tinyml
-## 0. Notice
-We will use README.md as our project management tool.
+# YOLOv8
 
-For every change made to this repository or every noticeable progress on our project, we shall record it in this README.md, so that all of us can keep up with the process.
+## coco128
+<img width="300\%" src="results/confusion_matrix.png">
+
+<table>
+  <tr>
+    <td>
+      <img src="results/val_batch0_labels.jpg" width="200">
+    </td>
+    <td>
+      <img src="results/val_batch0_pred.jpg" width="200">
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <img src="results/val_batch1_labels.jpg" width="200">
+    </td>
+    <td>
+      <img src="results/val_batch1_pred.jpg" width="200">
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <img src="results/val_batch2_labels.jpg" width="200">
+    </td>
+    <td>
+      <img src="results/val_batch2_pred.jpg" width="200">
+    </td>
+  </tr>
+</table>
