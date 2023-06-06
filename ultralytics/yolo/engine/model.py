@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Union
 
 from ultralytics import yolo  # noqa
-from ultralytics.nn.tasks import (ClassificationModel, DetectionModel, PoseModel, SegmentationModel, QuantDetectionModel,
+from ultralytics.nn.tasks import (ClassificationModel, DetectionModel, PoseModel, SegmentationModel, QuantDetectionModel, QASDetectionModel,
                                   attempt_load_one_weight, guess_model_task, nn, yaml_model_load)
 from ultralytics.yolo.cfg import get_cfg
 from ultralytics.yolo.engine.exporter import Exporter
@@ -31,7 +31,7 @@ TASK_MAP = {
         QuantDetectionModel, yolo.v8.detect.QuantDetectionTrainer, yolo.v8.detect.DetectionValidator,
         yolo.v8.detect.DetectionPredictor],
     'qas': [
-        DetectionModel, yolo.v8.detect.DetectionTrainer, yolo.v8.detect.DetectionValidator,
+        QASDetectionModel, yolo.v8.detect.DetectionTrainer, yolo.v8.detect.DetectionValidator,
         yolo.v8.detect.DetectionPredictor]}
 
 
