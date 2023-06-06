@@ -1,0 +1,11 @@
+python train_cls.py   configs/transfer.yaml --run_dir runs/flowers/mcunet-5fps/sparse_100kb/sgd_qas_nomom --net_name mcunet-5fps  --bs256_lr  0.1  --optimizer_name sgd_scale_nomom --enable_backward_config 1 --n_bias_update 22 --manual_weight_idx 21-24-27-30-36-39 --weight_update_ratio 1-1-1-1-0.125-0.25
+
+python train_cls.py   configs/transfer.yaml --run_dir runs/flowers/mcunet-5fps/full_update/sgd_qas_nomom --net_name mcunet-5fps  --bs256_lr  0.1  --optimizer_name sgd_scale_nomom --enable_backward_config 1 --n_bias_update 9 --n_weight_update 9
+
+{'run_dir': 'runs/flowers/mcunet-5fps/sparse_100kb/sgd_qas_nomom', 'manual_seed': 0, 'evaluate': False, 'ray_tune': 0, 'resume': 0, 'data_provider': {'data
+set': 'image_folder', 'root': '~/dataset/flowers102', 'resize_scale': 0.08, 'color_aug': 0.4, 'base_batch_size': 64, 'n_worker': 8, 'image_size': 128, 'num_classes': 102}, 'run_config
+': {'n_epochs': 50, 'base_lr': 0.025, 'bs256_lr': 0.1, 'warmup_epochs': 5, 'warmup_lr': 0, 'lr_schedule_name': 'cosine', 'weight_decay': 0, 'no_wd_keys': ['norm', 'bias'], 'optimizer_
+name': 'sgd_scale_nomom', 'bias_only': 0, 'fc_only': 0, 'fc_lr10': 0, 'eval_per_epochs': 10, 'grid_output': None, 'grid_ckpt_path': None, 'n_block_update': -1}, 'net_config': {'net_na
+me': 'mcunet-5fps', 'pretrained': False, 'cls_head': 'linear', 'dropout': 0.0, 'mcu_head_type': 'fp'}, 'backward_config': {'enable_backward_config': 1, 'n_bias_update': 22, 'n_weight_
+update': None, 'weight_update_ratio': '1-1-1-1-0.125-0.25', 'weight_select_criteria': 'magnitude+', 'pw1_weight_only': 0, 'manual_weight_idx': '21-24-27-30-36-39', 'quantize_gradient'
+: 0, 'freeze_fc': 0, 'train_scale': 0}}
