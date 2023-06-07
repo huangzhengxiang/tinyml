@@ -573,7 +573,9 @@ class QASDetectionTrainer(BaseTrainer):
                 while key_list[cur_key].split('.')[-1] != "conv":
                     cur_key += 1
                     continue
+                print(key_list[cur_key])
                 m.update(ptq_model[key_list[cur_key]])
+                cur_key+=1
                 
         LOGGER.info(f'Image sizes {self.args.imgsz} train, {self.args.imgsz} val\n'
                     f'Using {self.train_loader.num_workers * (world_size or 1)} dataloader workers\n'

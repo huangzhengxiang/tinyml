@@ -3,7 +3,7 @@ from ultralytics import YOLO
 
 if __name__=="__main__":
     # Load a model
-    model = YOLO("yolov8n.yaml","ptq").load('yolov8n-voc.pt')  # build a new model from scratch
+    model = YOLO("yolov8n.yaml","qas").load('yolov8n-voc.pt')  # build a new model from scratch
     # model = YOLO("yolov8n.yaml","qas").load('yolov8n.pt')  # build a new model from scratch
     # model = YOLO("yolov8n.yaml").load('yolov8n-relu.pt')  # build a new model from scratch
     # model = YOLO("yolov8n.yaml").load('yolov8n-voc.pt')  # build a new model from scratch

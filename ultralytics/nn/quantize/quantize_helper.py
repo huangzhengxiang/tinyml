@@ -2,8 +2,8 @@ import torch
 import torch.nn as nn
 import numpy as np
 
-from core.utils.config import configs
-from quantize.quantized_ops_diff import ScaledLinear
+# from core.utils.config import configs
+from ultralytics.nn.quantize.quantized_ops_diff import ScaledLinear
 
 def _append_flatten(model_q):
     model_q = list(model_q)
@@ -12,40 +12,40 @@ def _append_flatten(model_q):
     return model_q
 
 
-def create_scaled_head(model_q, norm_feat=False):
-    assert isinstance(model_q, nn.Sequential)
-    if not isinstance(model_q[-1], nn.Flatten):
-        model_q = _append_flatten(model_q)
-    model_q[-2] = ScaledLinear(model_q[-2].in_channels, configs.data_provider.num_classes,
-                               model_q[-2].x_scale, model_q[-2].zero_x, norm_feat=norm_feat)
-    return model_q
+# def create_scaled_head(model_q, norm_feat=False):
+#     assert isinstance(model_q, nn.Sequential)
+#     if not isinstance(model_q[-1], nn.Flatten):
+#         model_q = _append_flatten(model_q)
+#     model_q[-2] = ScaledLinear(model_q[-2].in_channels, configs.data_provider.num_classes,
+#                                model_q[-2].x_scale, model_q[-2].zero_x, norm_feat=norm_feat)
+#     return model_q
 
 
-def create_quantized_head(model_q):
-    from .quantized_ops_diff import QuantizedConv2dDiff
-    assert isinstance(model_q, nn.Sequential)
-    if not isinstance(model_q[-1], nn.Flatten):
-        model_q = _append_flatten(model_q)
-    sample_linear = nn.Conv2d(model_q[-2].in_channels, configs.data_provider.num_classes, 1)
+# def create_quantized_head(model_q):
+#     from .quantized_ops_diff import QuantizedConv2dDiff
+#     assert isinstance(model_q, nn.Sequential)
+#     if not isinstance(model_q[-1], nn.Flatten):
+#         model_q = _append_flatten(model_q)
+#     sample_linear = nn.Conv2d(model_q[-2].in_channels, configs.data_provider.num_classes, 1)
 
-    w_scales = get_weight_scales(sample_linear.weight.data, 8)
-    w, b = get_quantized_weight_and_bias(sample_linear.weight.data, sample_linear.bias.data, w_scales,
-                                         model_q[-2].x_scale, 8)
+#     w_scales = get_weight_scales(sample_linear.weight.data, 8)
+#     w, b = get_quantized_weight_and_bias(sample_linear.weight.data, sample_linear.bias.data, w_scales,
+#                                          model_q[-2].x_scale, 8)
 
-    org_op = model_q[-2]
-    # here we do not have y_scale, so that the output has the same scale
-    effective_scale = (model_q[-2].x_scale * w_scales).float()
+#     org_op = model_q[-2]
+#     # here we do not have y_scale, so that the output has the same scale
+#     effective_scale = (model_q[-2].x_scale * w_scales).float()
 
-    model_q[-2] = QuantizedConv2dDiff(model_q[-2].in_channels, configs.data_provider.num_classes, 1,
-                                      zero_x=model_q[-2].zero_x, zero_y=0,  # keep same args
-                                      effective_scale=effective_scale,
-                                      w_bit=8, a_bit=8,
-                                      )
-    model_q[-2].weight.data = torch.from_numpy(w).float()
-    model_q[-2].bias.data = torch.from_numpy(b).float()
-    model_q[-2].x_scale = org_op.x_scale
-    model_q[-2].y_scale = 1  # skipped actually
-    return model_q
+#     model_q[-2] = QuantizedConv2dDiff(model_q[-2].in_channels, configs.data_provider.num_classes, 1,
+#                                       zero_x=model_q[-2].zero_x, zero_y=0,  # keep same args
+#                                       effective_scale=effective_scale,
+#                                       w_bit=8, a_bit=8,
+#                                       )
+#     model_q[-2].weight.data = torch.from_numpy(w).float()
+#     model_q[-2].bias.data = torch.from_numpy(b).float()
+#     model_q[-2].x_scale = org_op.x_scale
+#     model_q[-2].y_scale = 1  # skipped actually
+#     return model_q
 
 
 def get_weight_scales(w, n_bit=8, k_near_zero_tolerance=1e-6, allow_all_same=False):
