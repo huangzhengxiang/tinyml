@@ -155,14 +155,15 @@ class _QuantizedConv2dFunc(torch.autograd.Function):
         else:
             grad_w = None
 
-        from core.utils.config import configs
-        if configs.backward_config.quantize_gradient:  # perform per-channel quantization
-            # quantize grad_x and grad_w
-            from .quantize_helper import get_weight_scales
-            w_scales = get_weight_scales(grad_w, n_bit=8)
-            grad_w = (grad_w / w_scales.view(-1, 1, 1, 1)).round() * w_scales.view(-1, 1, 1, 1)
-            x_scales = get_weight_scales(grad_x.transpose(0, 1))
-            grad_x = (grad_x / x_scales.view(1, -1, 1, 1)).round() * x_scales.view(1, -1, 1, 1)
+        # from core.utils.config import configs
+        # if configs.backward_config.quantize_gradient:  # perform per-channel quantization
+        # TODO: May be incorrect!
+        # quantize grad_x and grad_w
+        from .quantize_helper import get_weight_scales
+        w_scales = get_weight_scales(grad_w, n_bit=8)
+        grad_w = (grad_w / w_scales.view(-1, 1, 1, 1)).round() * w_scales.view(-1, 1, 1, 1)
+        x_scales = get_weight_scales(grad_x.transpose(0, 1))
+        grad_x = (grad_x / x_scales.view(1, -1, 1, 1)).round() * x_scales.view(1, -1, 1, 1)
 
         return grad_x, grad_w, grad_bias, grad_zero_x, grad_zero_y, None, None, None, None, None
 
@@ -179,12 +180,12 @@ class QuantizedConv2dDiff(QuantizedConv2d):
         self.register_buffer('zero_x', to_pt(zero_x))
         # self.register_buffer('zero_w', to_pt(zero_w))
         self.register_buffer('zero_y', to_pt(zero_y))
-        from core.utils.config import configs
-        if configs.backward_config.train_scale:
-            print('Note: the scale is also trained...')
-            self.register_parameter('effective_scale', torch.nn.Parameter(effective_scale))
-        else:
-            self.register_buffer('effective_scale', effective_scale)
+        # from core.utils.config import configs
+        # if configs.backward_config.train_scale:
+        #     print('Note: the scale is also trained...')
+        #     self.register_parameter('effective_scale', torch.nn.Parameter(effective_scale))
+        # else:
+        self.register_buffer('effective_scale', effective_scale)
 
         self.w_bit = w_bit
         self.a_bit = a_bit if a_bit is not None else w_bit

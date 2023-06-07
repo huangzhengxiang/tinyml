@@ -1,352 +1,352 @@
-QuantStub.scale [0.00787017]
-QuantStub.zero_point [0]
+QuantStub.scale [0.00391965]
+QuantStub.zero_point [-128]
 model.0.conv.weight (16, 3, 3, 3) int8
 model.0.conv.weight.scales (16,) float64
 model.0.conv.bias (16,) float32
-model.0.conv.scale 0.2996397
-model.0.conv.zero_point 0
+model.0.conv.scale 0.14923231
+model.0.conv.zero_point -128
 model.1.conv.weight (32, 16, 3, 3) int8
 model.1.conv.weight.scales (32,) float64
 model.1.conv.bias (32,) float32
-model.1.conv.scale 0.5391092
-model.1.conv.zero_point 0
+model.1.conv.scale 0.26849753
+model.1.conv.zero_point -128
 model.2.cv1.conv.weight (32, 32, 1, 1) int8
 model.2.cv1.conv.weight.scales (32,) float64
 model.2.cv1.conv.bias (32,) float32
-model.2.cv1.conv.scale 0.12401047
-model.2.cv1.conv.zero_point 0
+model.2.cv1.conv.scale 0.06176208
+model.2.cv1.conv.zero_point -128
 model.2.cv2.conv.weight (32, 48, 1, 1) int8
 model.2.cv2.conv.weight.scales (32,) float64
 model.2.cv2.conv.bias (32,) float32
-model.2.cv2.conv.scale 0.08423109
-model.2.cv2.conv.zero_point 0
+model.2.cv2.conv.scale 0.041950386
+model.2.cv2.conv.zero_point -128
 model.2.m.0.cv1.conv.weight (16, 16, 3, 3) int8
 model.2.m.0.cv1.conv.weight.scales (16,) float64
 model.2.m.0.cv1.conv.bias (16,) float32
-model.2.m.0.cv1.conv.scale 0.16122748
-model.2.m.0.cv1.conv.zero_point 0
+model.2.m.0.cv1.conv.scale 0.080297604
+model.2.m.0.cv1.conv.zero_point -128
 model.2.m.0.cv2.conv.weight (16, 16, 3, 3) int8
 model.2.m.0.cv2.conv.weight.scales (16,) float64
 model.2.m.0.cv2.conv.bias (16,) float32
-model.2.m.0.cv2.conv.scale 0.14324929
-model.2.m.0.cv2.conv.zero_point 0
+model.2.m.0.cv2.conv.scale 0.071343765
+model.2.m.0.cv2.conv.zero_point -128
 model.3.conv.weight (64, 32, 3, 3) int8
 model.3.conv.weight.scales (64,) float64
 model.3.conv.bias (64,) float32
-model.3.conv.scale 0.057501677
-model.3.conv.zero_point 0
+model.3.conv.scale 0.02863809
+model.3.conv.zero_point -128
 model.4.cv1.conv.weight (64, 64, 1, 1) int8
 model.4.cv1.conv.weight.scales (64,) float64
 model.4.cv1.conv.bias (64,) float32
-model.4.cv1.conv.scale 0.053002905
-model.4.cv1.conv.zero_point 0
+model.4.cv1.conv.scale 0.026397526
+model.4.cv1.conv.zero_point -128
 model.4.cv2.conv.weight (64, 128, 1, 1) int8
 model.4.cv2.conv.weight.scales (64,) float64
 model.4.cv2.conv.bias (64,) float32
-model.4.cv2.conv.scale 0.050177872
-model.4.cv2.conv.zero_point 0
+model.4.cv2.conv.scale 0.024990547
+model.4.cv2.conv.zero_point -128
 model.4.m.0.cv1.conv.weight (32, 32, 3, 3) int8
 model.4.m.0.cv1.conv.weight.scales (32,) float64
 model.4.m.0.cv1.conv.bias (32,) float32
-model.4.m.0.cv1.conv.scale 0.043708254
-model.4.m.0.cv1.conv.zero_point 0
+model.4.m.0.cv1.conv.scale 0.021768425
+model.4.m.0.cv1.conv.zero_point -128
 model.4.m.0.cv2.conv.weight (32, 32, 3, 3) int8
 model.4.m.0.cv2.conv.weight.scales (32,) float64
 model.4.m.0.cv2.conv.bias (32,) float32
-model.4.m.0.cv2.conv.scale 0.04343582
-model.4.m.0.cv2.conv.zero_point 0
+model.4.m.0.cv2.conv.scale 0.02163274
+model.4.m.0.cv2.conv.zero_point -128
 model.4.m.1.cv1.conv.weight (32, 32, 3, 3) int8
 model.4.m.1.cv1.conv.weight.scales (32,) float64
 model.4.m.1.cv1.conv.bias (32,) float32
-model.4.m.1.cv1.conv.scale 0.038623255
-model.4.m.1.cv1.conv.zero_point 0
+model.4.m.1.cv1.conv.scale 0.019235896
+model.4.m.1.cv1.conv.zero_point -128
 model.4.m.1.cv2.conv.weight (32, 32, 3, 3) int8
 model.4.m.1.cv2.conv.weight.scales (32,) float64
 model.4.m.1.cv2.conv.bias (32,) float32
-model.4.m.1.cv2.conv.scale 0.0646098
-model.4.m.1.cv2.conv.zero_point 0
+model.4.m.1.cv2.conv.scale 0.032178216
+model.4.m.1.cv2.conv.zero_point -128
 model.5.conv.weight (128, 64, 3, 3) int8
 model.5.conv.weight.scales (128,) float64
 model.5.conv.bias (128,) float32
-model.5.conv.scale 0.05750312
-model.5.conv.zero_point 0
+model.5.conv.scale 0.028638808
+model.5.conv.zero_point -128
 model.6.cv1.conv.weight (128, 128, 1, 1) int8
 model.6.cv1.conv.weight.scales (128,) float64
 model.6.cv1.conv.bias (128,) float32
-model.6.cv1.conv.scale 0.05769466
-model.6.cv1.conv.zero_point 0
+model.6.cv1.conv.scale 0.028734203
+model.6.cv1.conv.zero_point -128
 model.6.cv2.conv.weight (128, 256, 1, 1) int8
 model.6.cv2.conv.weight.scales (128,) float64
 model.6.cv2.conv.bias (128,) float32
-model.6.cv2.conv.scale 0.049342774
-model.6.cv2.conv.zero_point 0
+model.6.cv2.conv.scale 0.024574637
+model.6.cv2.conv.zero_point -128
 model.6.m.0.cv1.conv.weight (64, 64, 3, 3) int8
 model.6.m.0.cv1.conv.weight.scales (64,) float64
 model.6.m.0.cv1.conv.bias (64,) float32
-model.6.m.0.cv1.conv.scale 0.046842035
-model.6.m.0.cv1.conv.zero_point 0
+model.6.m.0.cv1.conv.scale 0.02332917
+model.6.m.0.cv1.conv.zero_point -128
 model.6.m.0.cv2.conv.weight (64, 64, 3, 3) int8
 model.6.m.0.cv2.conv.weight.scales (64,) float64
 model.6.m.0.cv2.conv.bias (64,) float32
-model.6.m.0.cv2.conv.scale 0.0686291
-model.6.m.0.cv2.conv.zero_point 0
+model.6.m.0.cv2.conv.scale 0.03417998
+model.6.m.0.cv2.conv.zero_point -128
 model.6.m.1.cv1.conv.weight (64, 64, 3, 3) int8
 model.6.m.1.cv1.conv.weight.scales (64,) float64
 model.6.m.1.cv1.conv.bias (64,) float32
-model.6.m.1.cv1.conv.scale 0.04794888
-model.6.m.1.cv1.conv.zero_point 0
+model.6.m.1.cv1.conv.scale 0.023880422
+model.6.m.1.cv1.conv.zero_point -128
 model.6.m.1.cv2.conv.weight (64, 64, 3, 3) int8
 model.6.m.1.cv2.conv.weight.scales (64,) float64
 model.6.m.1.cv2.conv.bias (64,) float32
-model.6.m.1.cv2.conv.scale 0.059452564
-model.6.m.1.cv2.conv.zero_point 0
+model.6.m.1.cv2.conv.scale 0.029609708
+model.6.m.1.cv2.conv.zero_point -128
 model.7.conv.weight (256, 128, 3, 3) int8
 model.7.conv.weight.scales (256,) float64
 model.7.conv.bias (256,) float32
-model.7.conv.scale 0.055878136
-model.7.conv.zero_point 0
+model.7.conv.scale 0.027829504
+model.7.conv.zero_point -128
 model.8.cv1.conv.weight (256, 256, 1, 1) int8
 model.8.cv1.conv.weight.scales (256,) float64
 model.8.cv1.conv.bias (256,) float32
-model.8.cv1.conv.scale 0.06490932
-model.8.cv1.conv.zero_point 0
+model.8.cv1.conv.scale 0.032327387
+model.8.cv1.conv.zero_point -128
 model.8.cv2.conv.weight (256, 384, 1, 1) int8
 model.8.cv2.conv.weight.scales (256,) float64
 model.8.cv2.conv.bias (256,) float32
-model.8.cv2.conv.scale 0.05875348
-model.8.cv2.conv.zero_point 0
+model.8.cv2.conv.scale 0.029261537
+model.8.cv2.conv.zero_point -128
 model.8.m.0.cv1.conv.weight (128, 128, 3, 3) int8
 model.8.m.0.cv1.conv.weight.scales (128,) float64
 model.8.m.0.cv1.conv.bias (128,) float32
-model.8.m.0.cv1.conv.scale 0.06300828
-model.8.m.0.cv1.conv.zero_point 0
+model.8.m.0.cv1.conv.scale 0.031380594
+model.8.m.0.cv1.conv.zero_point -128
 model.8.m.0.cv2.conv.weight (128, 128, 3, 3) int8
 model.8.m.0.cv2.conv.weight.scales (128,) float64
 model.8.m.0.cv2.conv.bias (128,) float32
-model.8.m.0.cv2.conv.scale 0.10762054
-model.8.m.0.cv2.conv.zero_point 0
+model.8.m.0.cv2.conv.scale 0.05359925
+model.8.m.0.cv2.conv.zero_point -128
 model.9.cv1.conv.weight (128, 256, 1, 1) int8
 model.9.cv1.conv.weight.scales (128,) float64
 model.9.cv1.conv.bias (128,) float32
-model.9.cv1.conv.scale 0.05688008
-model.9.cv1.conv.zero_point 0
+model.9.cv1.conv.scale 0.02832851
+model.9.cv1.conv.zero_point -128
 model.9.cv2.conv.weight (256, 512, 1, 1) int8
 model.9.cv2.conv.weight.scales (256,) float64
 model.9.cv2.conv.bias (256,) float32
-model.9.cv2.conv.scale 0.05301717
-model.9.cv2.conv.zero_point 0
+model.9.cv2.conv.scale 0.02640463
+model.9.cv2.conv.zero_point -128
 model.12.cv1.conv.weight (128, 384, 1, 1) int8
 model.12.cv1.conv.weight.scales (128,) float64
 model.12.cv1.conv.bias (128,) float32
-model.12.cv1.conv.scale 0.0430012
-model.12.cv1.conv.zero_point 0
+model.12.cv1.conv.scale 0.021416284
+model.12.cv1.conv.zero_point -128
 model.12.cv2.conv.weight (128, 192, 1, 1) int8
 model.12.cv2.conv.weight.scales (128,) float64
 model.12.cv2.conv.bias (128,) float32
-model.12.cv2.conv.scale 0.041101713
-model.12.cv2.conv.zero_point 0
+model.12.cv2.conv.scale 0.020470263
+model.12.cv2.conv.zero_point -128
 model.12.m.0.cv1.conv.weight (64, 64, 3, 3) int8
 model.12.m.0.cv1.conv.weight.scales (64,) float64
 model.12.m.0.cv1.conv.bias (64,) float32
-model.12.m.0.cv1.conv.scale 0.04815647
-model.12.m.0.cv1.conv.zero_point 0
+model.12.m.0.cv1.conv.scale 0.023983812
+model.12.m.0.cv1.conv.zero_point -128
 model.12.m.0.cv2.conv.weight (64, 64, 3, 3) int8
 model.12.m.0.cv2.conv.weight.scales (64,) float64
 model.12.m.0.cv2.conv.bias (64,) float32
-model.12.m.0.cv2.conv.scale 0.07043533
-model.12.m.0.cv2.conv.zero_point 0
+model.12.m.0.cv2.conv.scale 0.035079557
+model.12.m.0.cv2.conv.zero_point -128
 model.15.cv1.conv.weight (64, 192, 1, 1) int8
 model.15.cv1.conv.weight.scales (64,) float64
 model.15.cv1.conv.bias (64,) float32
-model.15.cv1.conv.scale 0.037292205
-model.15.cv1.conv.zero_point 0
+model.15.cv1.conv.scale 0.01857298
+model.15.cv1.conv.zero_point -128
 model.15.cv2.conv.weight (64, 96, 1, 1) int8
 model.15.cv2.conv.weight.scales (64,) float64
 model.15.cv2.conv.bias (64,) float32
-model.15.cv2.conv.scale 0.03909644
-model.15.cv2.conv.zero_point 0
+model.15.cv2.conv.scale 0.019471562
+model.15.cv2.conv.zero_point -128
 model.15.m.0.cv1.conv.weight (32, 32, 3, 3) int8
 model.15.m.0.cv1.conv.weight.scales (32,) float64
 model.15.m.0.cv1.conv.bias (32,) float32
-model.15.m.0.cv1.conv.scale 0.034978718
-model.15.m.0.cv1.conv.zero_point 0
+model.15.m.0.cv1.conv.scale 0.017420772
+model.15.m.0.cv1.conv.zero_point -128
 model.15.m.0.cv2.conv.weight (32, 32, 3, 3) int8
 model.15.m.0.cv2.conv.weight.scales (32,) float64
 model.15.m.0.cv2.conv.bias (32,) float32
-model.15.m.0.cv2.conv.scale 0.047879543
-model.15.m.0.cv2.conv.zero_point 0
+model.15.m.0.cv2.conv.scale 0.023845889
+model.15.m.0.cv2.conv.zero_point -128
 model.16.conv.weight (64, 64, 3, 3) int8
 model.16.conv.weight.scales (64,) float64
 model.16.conv.bias (64,) float32
-model.16.conv.scale 0.05595656
-model.16.conv.zero_point 0
+model.16.conv.scale 0.027868563
+model.16.conv.zero_point -128
 model.18.cv1.conv.weight (128, 192, 1, 1) int8
 model.18.cv1.conv.weight.scales (128,) float64
 model.18.cv1.conv.bias (128,) float32
-model.18.cv1.conv.scale 0.06939719
-model.18.cv1.conv.zero_point 0
+model.18.cv1.conv.scale 0.03456252
+model.18.cv1.conv.zero_point -128
 model.18.cv2.conv.weight (128, 192, 1, 1) int8
 model.18.cv2.conv.weight.scales (128,) float64
 model.18.cv2.conv.bias (128,) float32
-model.18.cv2.conv.scale 0.04419331
-model.18.cv2.conv.zero_point 0
+model.18.cv2.conv.scale 0.02201
+model.18.cv2.conv.zero_point -128
 model.18.m.0.cv1.conv.weight (64, 64, 3, 3) int8
 model.18.m.0.cv1.conv.weight.scales (64,) float64
 model.18.m.0.cv1.conv.bias (64,) float32
-model.18.m.0.cv1.conv.scale 0.039924983
-model.18.m.0.cv1.conv.zero_point 0
+model.18.m.0.cv1.conv.scale 0.019884206
+model.18.m.0.cv1.conv.zero_point -128
 model.18.m.0.cv2.conv.weight (64, 64, 3, 3) int8
 model.18.m.0.cv2.conv.weight.scales (64,) float64
 model.18.m.0.cv2.conv.bias (64,) float32
-model.18.m.0.cv2.conv.scale 0.067658894
-model.18.m.0.cv2.conv.zero_point 0
+model.18.m.0.cv2.conv.scale 0.033696786
+model.18.m.0.cv2.conv.zero_point -128
 model.19.conv.weight (128, 128, 3, 3) int8
 model.19.conv.weight.scales (128,) float64
 model.19.conv.bias (128,) float32
-model.19.conv.scale 0.050605472
-model.19.conv.zero_point 0
+model.19.conv.scale 0.025203511
+model.19.conv.zero_point -128
 model.21.cv1.conv.weight (256, 384, 1, 1) int8
 model.21.cv1.conv.weight.scales (256,) float64
 model.21.cv1.conv.bias (256,) float32
-model.21.cv1.conv.scale 0.06111298
-model.21.cv1.conv.zero_point 0
+model.21.cv1.conv.scale 0.030436661
+model.21.cv1.conv.zero_point -128
 model.21.cv2.conv.weight (256, 384, 1, 1) int8
 model.21.cv2.conv.weight.scales (256,) float64
 model.21.cv2.conv.bias (256,) float32
-model.21.cv2.conv.scale 0.06324727
-model.21.cv2.conv.zero_point 0
+model.21.cv2.conv.scale 0.03149962
+model.21.cv2.conv.zero_point -128
 model.21.m.0.cv1.conv.weight (128, 128, 3, 3) int8
 model.21.m.0.cv1.conv.weight.scales (128,) float64
 model.21.m.0.cv1.conv.bias (128,) float32
-model.21.m.0.cv1.conv.scale 0.045021098
-model.21.m.0.cv1.conv.zero_point 0
+model.21.m.0.cv1.conv.scale 0.022422273
+model.21.m.0.cv1.conv.zero_point -128
 model.21.m.0.cv2.conv.weight (128, 128, 3, 3) int8
 model.21.m.0.cv2.conv.weight.scales (128,) float64
 model.21.m.0.cv2.conv.bias (128,) float32
-model.21.m.0.cv2.conv.scale 0.09391614
-model.21.m.0.cv2.conv.zero_point 0
+model.21.m.0.cv2.conv.scale 0.04677392
+model.21.m.0.cv2.conv.zero_point -128
 model.22.cv2.0.0.conv.weight (64, 64, 3, 3) int8
 model.22.cv2.0.0.conv.weight.scales (64,) float64
 model.22.cv2.0.0.conv.bias (64,) float32
-model.22.cv2.0.0.conv.scale 0.0402912
-model.22.cv2.0.0.conv.zero_point 0
+model.22.cv2.0.0.conv.scale 0.020066598
+model.22.cv2.0.0.conv.zero_point -128
 model.22.cv2.0.1.conv.weight (64, 64, 3, 3) int8
 model.22.cv2.0.1.conv.weight.scales (64,) float64
 model.22.cv2.0.1.conv.bias (64,) float32
-model.22.cv2.0.1.conv.scale 0.19059475
-model.22.cv2.0.1.conv.zero_point 0
+model.22.cv2.0.1.conv.scale 0.09492365
+model.22.cv2.0.1.conv.zero_point -128
 model.22.cv2.0.2.weight (64, 64, 1, 1) int8
 model.22.cv2.0.2.weight.scales (64,) float64
 model.22.cv2.0.2.bias (64,) float32
-model.22.cv2.0.2.scale 0.21585706
-model.22.cv2.0.2.zero_point 45
+model.22.cv2.0.2.scale 0.107505284
+model.22.cv2.0.2.zero_point -37
 model.22.cv2.1.0.conv.weight (64, 128, 3, 3) int8
 model.22.cv2.1.0.conv.weight.scales (64,) float64
 model.22.cv2.1.0.conv.bias (64,) float32
-model.22.cv2.1.0.conv.scale 0.05832898
-model.22.cv2.1.0.conv.zero_point 0
+model.22.cv2.1.0.conv.scale 0.02905012
+model.22.cv2.1.0.conv.zero_point -128
 model.22.cv2.1.1.conv.weight (64, 64, 3, 3) int8
 model.22.cv2.1.1.conv.weight.scales (64,) float64
 model.22.cv2.1.1.conv.bias (64,) float32
-model.22.cv2.1.1.conv.scale 0.2003751
-model.22.cv2.1.1.conv.zero_point 0
+model.22.cv2.1.1.conv.scale 0.099794656
+model.22.cv2.1.1.conv.zero_point -128
 model.22.cv2.1.2.weight (64, 64, 1, 1) int8
 model.22.cv2.1.2.weight.scales (64,) float64
 model.22.cv2.1.2.bias (64,) float32
-model.22.cv2.1.2.scale 0.23157045
-model.22.cv2.1.2.zero_point 42
+model.22.cv2.1.2.scale 0.115331165
+model.22.cv2.1.2.zero_point -43
 model.22.cv2.2.0.conv.weight (64, 256, 3, 3) int8
 model.22.cv2.2.0.conv.weight.scales (64,) float64
 model.22.cv2.2.0.conv.bias (64,) float32
-model.22.cv2.2.0.conv.scale 0.1325251
-model.22.cv2.2.0.conv.zero_point 0
+model.22.cv2.2.0.conv.scale 0.0660027
+model.22.cv2.2.0.conv.zero_point -128
 model.22.cv2.2.1.conv.weight (64, 64, 3, 3) int8
 model.22.cv2.2.1.conv.weight.scales (64,) float64
 model.22.cv2.2.1.conv.bias (64,) float32
-model.22.cv2.2.1.conv.scale 0.20603624
-model.22.cv2.2.1.conv.zero_point 0
+model.22.cv2.2.1.conv.scale 0.10261413
+model.22.cv2.2.1.conv.zero_point -128
 model.22.cv2.2.2.weight (64, 64, 1, 1) int8
 model.22.cv2.2.2.weight.scales (64,) float64
 model.22.cv2.2.2.bias (64,) float32
-model.22.cv2.2.2.scale 0.50005174
-model.22.cv2.2.2.zero_point 54
+model.22.cv2.2.2.scale 0.24904537
+model.22.cv2.2.2.zero_point -19
 model.22.cv3.0.0.conv.weight (80, 64, 3, 3) int8
 model.22.cv3.0.0.conv.weight.scales (80,) float64
 model.22.cv3.0.0.conv.bias (80,) float32
-model.22.cv3.0.0.conv.scale 0.051968273
-model.22.cv3.0.0.conv.zero_point 0
+model.22.cv3.0.0.conv.scale 0.025882239
+model.22.cv3.0.0.conv.zero_point -128
 model.22.cv3.0.1.conv.weight (80, 80, 3, 3) int8
 model.22.cv3.0.1.conv.weight.scales (80,) float64
 model.22.cv3.0.1.conv.bias (80,) float32
-model.22.cv3.0.1.conv.scale 0.078849055
-model.22.cv3.0.1.conv.zero_point 0
+model.22.cv3.0.1.conv.scale 0.03926992
+model.22.cv3.0.1.conv.zero_point -128
 model.22.cv3.0.2.weight (80, 80, 1, 1) int8
 model.22.cv3.0.2.weight.scales (80,) float64
 model.22.cv3.0.2.bias (80,) float32
-model.22.cv3.0.2.scale 0.1441128
+model.22.cv3.0.2.scale 0.07177382
 model.22.cv3.0.2.zero_point 127
 model.22.cv3.1.0.conv.weight (80, 128, 3, 3) int8
 model.22.cv3.1.0.conv.weight.scales (80,) float64
 model.22.cv3.1.0.conv.bias (80,) float32
-model.22.cv3.1.0.conv.scale 0.056521207
-model.22.cv3.1.0.conv.zero_point 0
+model.22.cv3.1.0.conv.scale 0.028149776
+model.22.cv3.1.0.conv.zero_point -128
 model.22.cv3.1.1.conv.weight (80, 80, 3, 3) int8
 model.22.cv3.1.1.conv.weight.scales (80,) float64
 model.22.cv3.1.1.conv.bias (80,) float32
-model.22.cv3.1.1.conv.scale 0.082297415
-model.22.cv3.1.1.conv.zero_point 0
+model.22.cv3.1.1.conv.scale 0.04098734
+model.22.cv3.1.1.conv.zero_point -128
 model.22.cv3.1.2.weight (80, 80, 1, 1) int8
 model.22.cv3.1.2.weight.scales (80,) float64
 model.22.cv3.1.2.bias (80,) float32
-model.22.cv3.1.2.scale 0.13966359
-model.22.cv3.1.2.zero_point 118
+model.22.cv3.1.2.scale 0.06955794
+model.22.cv3.1.2.zero_point 109
 model.22.cv3.2.0.conv.weight (80, 256, 3, 3) int8
 model.22.cv3.2.0.conv.weight.scales (80,) float64
 model.22.cv3.2.0.conv.bias (80,) float32
-model.22.cv3.2.0.conv.scale 0.060628247
-model.22.cv3.2.0.conv.zero_point 0
+model.22.cv3.2.0.conv.scale 0.030195244
+model.22.cv3.2.0.conv.zero_point -128
 model.22.cv3.2.1.conv.weight (80, 80, 3, 3) int8
 model.22.cv3.2.1.conv.weight.scales (80,) float64
 model.22.cv3.2.1.conv.bias (80,) float32
-model.22.cv3.2.1.conv.scale 0.07752621
-model.22.cv3.2.1.conv.zero_point 0
+model.22.cv3.2.1.conv.scale 0.038611095
+model.22.cv3.2.1.conv.zero_point -128
 model.22.cv3.2.2.weight (80, 80, 1, 1) int8
 model.22.cv3.2.2.weight.scales (80,) float64
 model.22.cv3.2.2.bias (80,) float32
-model.22.cv3.2.2.scale 0.14249775
-model.22.cv3.2.2.zero_point 102
-model.22.dfl.conv.weight [[[[  0]]
+model.22.cv3.2.2.scale 0.07096946
+model.22.cv3.2.2.zero_point 77
+model.22.dfl.conv.weight [[[[-128]]
 
-  [[  8]]
+  [[-111]]
 
-  [[ 17]]
+  [[ -94]]
 
-  [[ 26]]
+  [[ -77]]
 
-  [[ 34]]
+  [[ -60]]
 
-  [[ 42]]
+  [[ -43]]
 
-  [[ 51]]
+  [[ -26]]
 
-  [[ 60]]
+  [[  -9]]
 
-  [[ 68]]
+  [[   8]]
 
-  [[ 76]]
+  [[  25]]
 
-  [[ 85]]
+  [[  42]]
 
-  [[ 94]]
+  [[  59]]
 
-  [[102]]
+  [[  76]]
 
-  [[110]]
+  [[  93]]
 
-  [[119]]
+  [[ 110]]
 
-  [[127]]]]
-model.22.dfl.conv.weight.scales [0.11764706]
+  [[ 127]]]]
+model.22.dfl.conv.weight.scales [0.05882353]
 model.22.dfl.conv.bias None
-model.22.dfl.conv.scale 0.11008499
-model.22.dfl.conv.zero_point 0
+model.22.dfl.conv.scale 0.054826643
+model.22.dfl.conv.zero_point -128

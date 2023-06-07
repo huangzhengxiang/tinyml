@@ -333,8 +333,6 @@ class QuantDetectionTrainer(BaseTrainer):
             
             self.model = torch.quantization.convert(self.model)
             print(self.model)
-            for m in self.model.children():
-                print(type(m),hasattr(m,"zero_point"))
             state_dict = self.model.state_dict()
             print(len(state_dict))
             ptq_dict = {}

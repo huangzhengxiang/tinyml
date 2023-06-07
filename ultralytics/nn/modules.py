@@ -24,11 +24,12 @@ def autopad(k, p=None, d=1):  # kernel, padding, dilation
 class Conv(nn.Module):
     """Standard convolution with args(ch_in, ch_out, kernel, stride, padding, groups, dilation, activation)."""
     default_act = nn.SiLU()  # default activation
+    is_qas = False
 
-    def __init__(self, c1, c2, k=1, s=1, p=None, g=1, d=1, act=True, is_qas=False):
+    def __init__(self, c1, c2, k=1, s=1, p=None, g=1, d=1, act=True):
         """Initialize Conv layer with given arguments including activation."""
         super().__init__()
-        if is_qas:
+        if Conv.is_qas:
             self.conv = QuantizedConv2d(c1, c2, k,
                            padding=autopad(k, p, d), stride=s,
                            groups=g, w_bit=8, a_bit=8)
