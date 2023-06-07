@@ -31,7 +31,7 @@ TASK_MAP = {
         QuantDetectionModel, yolo.v8.detect.QuantDetectionTrainer, yolo.v8.detect.DetectionValidator,
         yolo.v8.detect.DetectionPredictor],
     'qas': [
-        QASDetectionModel, yolo.v8.detect.DetectionTrainer, yolo.v8.detect.DetectionValidator,
+        QASDetectionModel, yolo.v8.detect.QASDetectionTrainer, yolo.v8.detect.DetectionValidator,
         yolo.v8.detect.DetectionPredictor]}
 
 
