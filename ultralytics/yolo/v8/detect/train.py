@@ -23,6 +23,9 @@ from ultralytics.yolo.utils.tal import TaskAlignedAssigner, dist2bbox, make_anch
 from ultralytics.yolo.utils.torch_utils import de_parallel, torch_distributed_zero_first
 from ultralytics.yolo.utils import (DEFAULT_CFG, LOGGER, ONLINE, RANK, ROOT, SETTINGS, TQDM_BAR_FORMAT, __version__,
                                     callbacks, clean_url, colorstr, emojis, yaml_save)
+from ultralytics.nn.modules import Conv, DWConv
+from ultralytics.nn.quantize.custom_quantized_format import QuantizedConv2d, get_effective_scale
+from ultralytics.nn.quantize.quantized_ops import to_np, to_pt, USE_FP_SCALE
 
 
 # BaseTrainer python usage
@@ -520,6 +523,27 @@ class QASDetectionTrainer(BaseTrainer):
         plot_labels(boxes, cls.squeeze(), names=self.data['names'], save_dir=self.save_dir)
 
 
+    def generateQuantConv(self, ori_model: nn.Conv2d, new_dict: dict):
+        kwargs = {
+            'zero_x': to_pt(new_dict['x_zero']),
+            'zero_w': to_pt(0),
+            'zero_y': to_pt(new_dict['y_zero']),
+        }
+        effective_scale = get_effective_scale(new_dict['x_scale'], new_dict['w_scales'],
+                                              new_dict['y_scale'])
+        kwargs['effective_scale'] = to_pt(effective_scale)
+        newConv = QuantizedConv2d(
+            ori_model.in_channels, ori_model.out_channels, ori_model.kernel_size,
+                padding=ori_model.padding, stride=ori_model.stride,
+                groups=ori_model.groups, w_bit=8, a_bit=8
+        )
+        newConv.weight.data = to_pt(new_dict['weight'])
+        newConv.bias.data = to_pt(new_dict['bias'])
+        # Note that these parameters are added for convenience, not actually needed
+        newConv.x_scale = new_dict['x_scale']
+        newConv.y_scale = new_dict['y_scale']
+        return newConv
+
     def _do_train(self, world_size=1):
         """Train completed, evaluate and plot if specified by arguments."""
         assert world_size == 1 
@@ -534,6 +558,22 @@ class QASDetectionTrainer(BaseTrainer):
         nw = max(round(self.args.warmup_epochs * nb), 100)  # number of warmup iterations
         last_opt_step = -1
         self.run_callbacks('on_train_start')
+        ptq_model = torch.load(self.ptq_ckpt)
+        key_list = list(ptq_model.keys())
+        cur_key = 0
+        Conv.is_qas = True
+        for module_name,m in self.model.named_children():
+            if isinstance(m, nn.Conv2d):
+                self.model.add_module(module_name,self.generateQuantConv(m,ptq_model[module_name]))
+                print(module_name)
+                
+        for m in self.model.modules():
+            if isinstance(m, (Conv, DWConv)):
+                while key_list[cur_key].split('.')[-1] != "conv":
+                    cur_key += 1
+                    continue
+                m.update(ptq_model[key_list[cur_key]])
+                
         LOGGER.info(f'Image sizes {self.args.imgsz} train, {self.args.imgsz} val\n'
                     f'Using {self.train_loader.num_workers * (world_size or 1)} dataloader workers\n'
                     f"Logging results to {colorstr('bold', self.save_dir)}\n"

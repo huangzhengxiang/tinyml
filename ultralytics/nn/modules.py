@@ -9,7 +9,8 @@ import torch
 import torch.nn as nn
 
 from ultralytics.yolo.utils.tal import dist2bbox, make_anchors
-from ultralytics.nn.quantize.custom_quantized_format import QuantizedConv2d
+from ultralytics.nn.quantize.custom_quantized_format import QuantizedConv2d, get_effective_scale
+from ultralytics.nn.quantize.quantized_ops import to_np, to_pt, USE_FP_SCALE
 
 
 def autopad(k, p=None, d=1):  # kernel, padding, dilation
@@ -26,7 +27,7 @@ class Conv(nn.Module):
     default_act = nn.SiLU()  # default activation
     is_qas = False
 
-    def __init__(self, c1, c2, k=1, s=1, p=None, g=1, d=1, act=True):
+    def __init__(self, c1, c2, k=1, s=1, p=None, g=1, d=1, act=True, **kwargs):
         """Initialize Conv layer with given arguments including activation."""
         super().__init__()
         if Conv.is_qas:
@@ -37,6 +38,27 @@ class Conv(nn.Module):
             self.conv = nn.Conv2d(c1, c2, k, s, autopad(k, p, d), groups=g, dilation=d, bias=False)
             self.bn = nn.BatchNorm2d(c2)
             self.act = self.default_act if act is True else act if isinstance(act, nn.Module) else nn.Identity()
+
+    def update(self,new_dict):
+        kwargs = {
+            'zero_x': to_pt(new_dict['x_zero']),
+            'zero_w': to_pt(0),
+            'zero_y': to_pt(new_dict['y_zero']),
+        }
+        effective_scale = get_effective_scale(new_dict['x_scale'], new_dict['w_scales'],
+                                              new_dict['y_scale'])
+        kwargs['effective_scale'] = to_pt(effective_scale)
+        self.conv = QuantizedConv2d(self.conv.in_channels, self.conv.out_channels, self.conv.kernel_size,
+                padding=self.conv.padding, stride=self.conv.stride,
+                groups=self.conv.groups, w_bit=8, a_bit=8, **kwargs)
+        self.conv.weight.data = to_pt(new_dict['weight'])
+        self.conv.bias.data = to_pt(new_dict['bias'])
+        # Note that these parameters are added for convenience, not actually needed
+        self.conv.x_scale = new_dict['x_scale']
+        self.conv.y_scale = new_dict['y_scale']
+        delattr(self,"bn")
+        delattr(self,"act")
+        return
 
     def forward(self, x):
         """Apply convolution, batch normalization and activation to input tensor."""
