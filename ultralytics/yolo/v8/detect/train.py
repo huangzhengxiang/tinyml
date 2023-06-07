@@ -9,6 +9,7 @@ from torch.ao.quantization.observer import PerChannelMinMaxObserver
 import time
 from tqdm import tqdm
 from datetime import datetime
+import torch.distributed as dist
 
 from ultralytics.nn.tasks import DetectionModel, QuantDetectionModel
 from ultralytics.yolo import v8
