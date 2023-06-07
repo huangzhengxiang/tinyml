@@ -9,6 +9,7 @@ import torch
 import torch.nn as nn
 
 from ultralytics.yolo.utils.tal import dist2bbox, make_anchors
+from ultralytics.nn.quantize.custom_quantized_format import QuantizedConv2d
 
 
 def autopad(k, p=None, d=1):  # kernel, padding, dilation
@@ -24,12 +25,17 @@ class Conv(nn.Module):
     """Standard convolution with args(ch_in, ch_out, kernel, stride, padding, groups, dilation, activation)."""
     default_act = nn.SiLU()  # default activation
 
-    def __init__(self, c1, c2, k=1, s=1, p=None, g=1, d=1, act=True):
+    def __init__(self, c1, c2, k=1, s=1, p=None, g=1, d=1, act=True, is_qas=False):
         """Initialize Conv layer with given arguments including activation."""
         super().__init__()
-        self.conv = nn.Conv2d(c1, c2, k, s, autopad(k, p, d), groups=g, dilation=d, bias=False)
-        self.bn = nn.BatchNorm2d(c2)
-        self.act = self.default_act if act is True else act if isinstance(act, nn.Module) else nn.Identity()
+        if is_qas:
+            self.conv = QuantizedConv2d(c1, c2, k,
+                           padding=autopad(k, p, d), stride=s,
+                           groups=g, w_bit=8, a_bit=8)
+        else:
+            self.conv = nn.Conv2d(c1, c2, k, s, autopad(k, p, d), groups=g, dilation=d, bias=False)
+            self.bn = nn.BatchNorm2d(c2)
+            self.act = self.default_act if act is True else act if isinstance(act, nn.Module) else nn.Identity()
 
     def forward(self, x):
         """Apply convolution, batch normalization and activation to input tensor."""
@@ -38,6 +44,10 @@ class Conv(nn.Module):
     def forward_fuse(self, x):
         """Perform transposed convolution of 2D data."""
         return self.act(self.conv(x))
+    
+    def forward_fuse_all(self, x):
+        """Perform transposed convolution of 2D data."""
+        return self.conv(x)
 
 
 class DWConv(Conv):
@@ -72,6 +82,10 @@ class ConvTranspose(nn.Module):
     def forward_fuse(self, x):
         """Applies activation and convolution transpose operation to input."""
         return self.act(self.conv_transpose(x))
+    
+    def forward_fuse_all(self, x):
+        """Applies activation and convolution transpose operation to input."""
+        return self.conv_transpose(x)
 
 
 class DFL(nn.Module):

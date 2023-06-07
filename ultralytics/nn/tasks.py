@@ -87,7 +87,7 @@ class BaseModel(nn.Module):
         if c:
             LOGGER.info(f"{sum(dt):10.2f} {'-':>10s} {'-':>10s}  Total")
 
-    def fuse(self, verbose=True):
+    def fuse(self, verbose=True, fuse_all=False):
         """
         Fuse the `Conv2d()` and `BatchNorm2d()` layers of the model into a single layer, in order to improve the
         computation efficiency.
@@ -349,6 +349,38 @@ class QuantDetectionModel(BaseModel):
         if verbose:
             self.info()
             LOGGER.info('')
+            
+    def fuse(self, verbose=True, fuse_all=False):
+        """
+        Fuse the `Conv2d()` and `BatchNorm2d()` layers of the model into a single layer, in order to improve the
+        computation efficiency.
+
+        Returns:
+            (nn.Module): The fused model is returned.
+        """
+        if not self.is_fused():
+            for m in self.model.modules():
+                if isinstance(m, (Conv, DWConv)) and hasattr(m, 'bn'):
+                    m.conv = fuse_conv_and_bn(m.conv, m.bn)  # update conv
+                    delattr(m, 'bn')  # remove batchnorm
+                    if fuse_all:
+                        torch.quantization.fuse_modules(m, [['conv', 'act']], inplace=True)
+                        delattr(m, 'act') 
+                        m.forward = m.forward_fuse_all  # update forward
+                    else:
+                        m.forward = m.forward_fuse  # update forward
+                if isinstance(m, ConvTranspose) and hasattr(m, 'bn'):
+                    m.conv_transpose = fuse_deconv_and_bn(m.conv_transpose, m.bn)
+                    delattr(m, 'bn')  # remove batchnorm
+                    if fuse_all:
+                        torch.quantization.fuse_modules(m, [['conv', 'act']], inplace=True)
+                        delattr(m, 'act') 
+                        m.forward = m.forward_fuse_all  # update forward
+                    else:
+                        m.forward = m.forward_fuse  # update forward
+            self.info(verbose=verbose)
+
+        return self
 
     def forward(self, x, augment=False, profile=False, visualize=False):
         """Run forward pass on input image(s) with optional augmentation and profiling."""

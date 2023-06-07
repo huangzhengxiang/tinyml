@@ -4,6 +4,8 @@ from copy import copy, deepcopy
 import numpy as np
 import torch
 import torch.nn as nn
+from torch.ao.quantization.qconfig import QConfig, HistogramObserver
+from torch.ao.quantization.observer import PerChannelMinMaxObserver
 import time
 from tqdm import tqdm
 from datetime import datetime
@@ -277,8 +279,13 @@ class QuantDetectionTrainer(BaseTrainer):
             base_idx = (self.epochs - self.args.close_mosaic) * nb
             self.plot_idx.extend([base_idx, base_idx + 1, base_idx + 2])
         epoch = self.epochs  # predefine for resume fully trained model edge cases
+        self.model.fuse(fuse_all=True)
         self.model.eval()
-        self.model.qconfig = torch.quantization.get_default_qconfig("fbgemm")
+        self.model.qconfig = QConfig(activation=HistogramObserver.with_args(dtype=torch.qint8,reduce_range=False),
+                                weight=PerChannelMinMaxObserver.with_args(
+                                    dtype=torch.qint8, qscheme=torch.per_channel_affine
+                            ))
+        # self.model.qconfig = torch.quantization.get_default_qconfig("fbgemm")
         print(self.model.qconfig)
         self.model = torch.quantization.prepare(self.model)
         for epoch in range(self.epochs):
@@ -323,8 +330,11 @@ class QuantDetectionTrainer(BaseTrainer):
                     self.run_callbacks('on_batch_end')
 
                 self.run_callbacks('on_train_batch_end')
-
+            
             self.model = torch.quantization.convert(self.model)
+            print(self.model)
+            for m in self.model.children():
+                print(type(m),hasattr(m,"zero_point"))
             state_dict = self.model.state_dict()
             print(len(state_dict))
             ptq_dict = {}
@@ -333,14 +343,12 @@ class QuantDetectionTrainer(BaseTrainer):
                     if state_dict[name].dtype == torch.qint8 or state_dict[name].dtype == torch.qint32:
                         # print(name,state_dict[name].int_repr())
                         ptq_dict[name]=state_dict[name].int_repr().numpy()
-                        print(name,state_dict[name])
-                        ptq_dict[name+".scales"]=state_dict[name].scale.numpy()
-                        ptq_dict[name+".zero"]=state_dict[name].zero_point.numpy()
+                        ptq_dict[name+".scales"]=state_dict[name].q_per_channel_scales().numpy()
                     else:
-                        print(name,state_dict[name])
+                        # print(name,state_dict[name])
                         ptq_dict[name]=state_dict[name].numpy()
                 else:
-                    print(name,state_dict[name])
+                    # print(name,state_dict[name])
                     ptq_dict[name]=state_dict[name]
             torch.save(ptq_dict,self.ptq_ckpt)
             self.run_callbacks('on_train_epoch_end')
