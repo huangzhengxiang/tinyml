@@ -519,12 +519,11 @@ class QASDetectionTrainer(BaseTrainer):
         cls = np.concatenate([lb['cls'] for lb in self.train_loader.dataset.labels], 0)
         plot_labels(boxes, cls.squeeze(), names=self.data['names'], save_dir=self.save_dir)
 
-    @torch.no_grad()
+
     def _do_train(self, world_size=1):
         """Train completed, evaluate and plot if specified by arguments."""
-        assert world_size == 1           
-        assert self.epochs == 1 
-        self.ptq_ckpt="./ptq.pth"
+        assert world_size == 1 
+        self.ptq_ckpt = "./ptq_weight.pth"
         self.device = torch.device("cpu")
         self._setup_train(world_size)
 
@@ -532,6 +531,8 @@ class QASDetectionTrainer(BaseTrainer):
         self.epoch_time_start = time.time()
         self.train_time_start = time.time()
         nb = len(self.train_loader)  # number of batches
+        nw = max(round(self.args.warmup_epochs * nb), 100)  # number of warmup iterations
+        last_opt_step = -1
         self.run_callbacks('on_train_start')
         LOGGER.info(f'Image sizes {self.args.imgsz} train, {self.args.imgsz} val\n'
                     f'Using {self.train_loader.num_workers * (world_size or 1)} dataloader workers\n'
@@ -541,19 +542,10 @@ class QASDetectionTrainer(BaseTrainer):
             base_idx = (self.epochs - self.args.close_mosaic) * nb
             self.plot_idx.extend([base_idx, base_idx + 1, base_idx + 2])
         epoch = self.epochs  # predefine for resume fully trained model edge cases
-        self.model.fuse(fuse_all=True)
-        self.model.eval()
-        self.model.qconfig = QConfig(activation=HistogramObserver.with_args(dtype=torch.qint8,reduce_range=False),
-                                weight=PerChannelMinMaxObserver.with_args(
-                                    dtype=torch.qint8, qscheme=torch.per_channel_affine
-                            ))
-        # self.model.qconfig = torch.quantization.get_default_qconfig("fbgemm")
-        print(self.model.qconfig)
-        self.model = torch.quantization.prepare(self.model)
-        for epoch in range(self.epochs):
+        for epoch in range(self.start_epoch, self.epochs):
             self.epoch = epoch
-            self.lr = self.lr = {'lr/pg': 0.}  # for loggers
             self.run_callbacks('on_train_epoch_start')
+            self.model.train()
             if RANK != -1:
                 self.train_loader.sampler.set_epoch(epoch)
             pbar = enumerate(self.train_loader)
@@ -570,19 +562,39 @@ class QASDetectionTrainer(BaseTrainer):
                 LOGGER.info(self.progress_string())
                 pbar = tqdm(enumerate(self.train_loader), total=nb, bar_format=TQDM_BAR_FORMAT)
             self.tloss = None
+            self.optimizer.zero_grad()
             for i, batch in pbar:
                 self.run_callbacks('on_train_batch_start')
+                # Warmup
+                ni = i + nb * epoch
+                if ni <= nw:
+                    xi = [0, nw]  # x interp
+                    self.accumulate = max(1, np.interp(ni, xi, [1, self.args.nbs / self.batch_size]).round())
+                    for j, x in enumerate(self.optimizer.param_groups):
+                        # Bias lr falls from 0.1 to lr0, all other lrs rise from 0.0 to lr0
+                        x['lr'] = np.interp(
+                            ni, xi, [self.args.warmup_bias_lr if j == 0 else 0.0, x['initial_lr'] * self.lf(epoch)])
 
-                batch = self.preprocess_batch(batch)
-                preds = self.model(batch['img'])
-                self.loss, self.loss_items = self.criterion(preds, batch)
-                if RANK != -1:
-                    self.loss *= world_size
-                self.tloss = (self.tloss * i + self.loss_items) / (i + 1) if self.tloss is not None \
-                    else self.loss_items
+                # Forward
+                with torch.cuda.amp.autocast(self.amp):
+                    batch = self.preprocess_batch(batch)
+                    preds = self.model(batch['img'])
+                    self.loss, self.loss_items = self.criterion(preds, batch)
+                    if RANK != -1:
+                        self.loss *= world_size
+                    self.tloss = (self.tloss * i + self.loss_items) / (i + 1) if self.tloss is not None \
+                        else self.loss_items
+
+                # Backward
+                self.scaler.scale(self.loss).backward()
+
+                # Optimize - https://pytorch.org/docs/master/notes/amp_examples.html
+                if ni - last_opt_step >= self.accumulate:
+                    self.optimizer_step()
+                    last_opt_step = ni
 
                 # Log
-                mem = f'{0:.3g}G'  # (GB)
+                mem = f'{torch.cuda.memory_reserved() / 1E9 if torch.cuda.is_available() else 0:.3g}G'  # (GB)
                 loss_len = self.tloss.shape[0] if len(self.tloss.size()) else 1
                 losses = self.tloss if loss_len > 1 else torch.unsqueeze(self.tloss, 0)
                 if RANK in (-1, 0):
@@ -590,27 +602,14 @@ class QASDetectionTrainer(BaseTrainer):
                         ('%11s' * 2 + '%11.4g' * (2 + loss_len)) %
                         (f'{epoch + 1}/{self.epochs}', mem, *losses, batch['cls'].shape[0], batch['img'].shape[-1]))
                     self.run_callbacks('on_batch_end')
+                    if self.args.plots and ni in self.plot_idx:
+                        self.plot_training_samples(batch, ni)
 
                 self.run_callbacks('on_train_batch_end')
-            
-            self.model = torch.quantization.convert(self.model)
-            print(self.model)
-            state_dict = self.model.state_dict()
-            print(len(state_dict))
-            ptq_dict = {}
-            for j, name in enumerate(state_dict):
-                if hasattr(state_dict[name],"dtype"):
-                    if state_dict[name].dtype == torch.qint8 or state_dict[name].dtype == torch.qint32:
-                        # print(name,state_dict[name].int_repr())
-                        ptq_dict[name]=state_dict[name].int_repr().numpy()
-                        ptq_dict[name+".scales"]=state_dict[name].q_per_channel_scales().numpy()
-                    else:
-                        # print(name,state_dict[name])
-                        ptq_dict[name]=state_dict[name].numpy()
-                else:
-                    # print(name,state_dict[name])
-                    ptq_dict[name]=state_dict[name]
-            torch.save(ptq_dict,self.ptq_ckpt)
+
+            self.lr = {f'lr/pg{ir}': x['lr'] for ir, x in enumerate(self.optimizer.param_groups)}  # for loggers
+
+            self.scheduler.step()
             self.run_callbacks('on_train_epoch_end')
 
             if RANK in (-1, 0):
@@ -624,15 +623,20 @@ class QASDetectionTrainer(BaseTrainer):
                 self.save_metrics(metrics={**self.label_loss_items(self.tloss), **self.metrics, **self.lr})
                 self.stop = self.stopper(epoch + 1, self.fitness)
 
-                # Save model
-                if self.args.save or (epoch + 1 == self.epochs):
-                    self.save_model()
-                    self.run_callbacks('on_model_save')
-
             tnow = time.time()
             self.epoch_time = tnow - self.epoch_time_start
             self.epoch_time_start = tnow
             self.run_callbacks('on_fit_epoch_end')
+            torch.cuda.empty_cache()  # clears GPU vRAM at end of epoch, can help with out of memory errors
+
+            # Early Stopping
+            if RANK != -1:  # if DDP training
+                broadcast_list = [self.stop if RANK == 0 else None]
+                dist.broadcast_object_list(broadcast_list, 0)  # broadcast 'stop' to all ranks
+                if RANK != 0:
+                    self.stop = broadcast_list[0]
+            if self.stop:
+                break  # must break all DDP ranks
 
         if RANK in (-1, 0):
             # Do final val with best.pt
@@ -642,6 +646,7 @@ class QASDetectionTrainer(BaseTrainer):
             if self.args.plots:
                 self.plot_metrics()
             self.run_callbacks('on_train_end')
+        torch.cuda.empty_cache()
         self.run_callbacks('teardown')
 
     def save_model(self):
